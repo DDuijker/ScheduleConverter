@@ -24,7 +24,8 @@ def read_schedule_csv(file_path, footer_lines):
     return new_df
 
 
-def create_calendar_events(name, df, work_start_hour, standby_start_hour, standby_start_minutes):
+def create_calendar_events(name, df, work_start_hour, work_start_minutes, work_end_hour, work_end_minutes,
+                           standby_start_hour, standby_start_minutes, standby_end_hour, standby_end_minutes):
     cal = Calendar()
     filtered_df = df[df.apply(lambda row: name in row.values, axis=1)]
 
@@ -32,10 +33,12 @@ def create_calendar_events(name, df, work_start_hour, standby_start_hour, standb
     standby_df = filtered_df[filtered_df['Standby'] == name]
 
     for index, row in shift_df.iterrows():
-        create_event(cal, row['Date'], 'Work Shift', work_start_hour, 0, 23, 0)
+        create_event(cal, row['Date'], 'Work Shift', work_start_hour, work_start_minutes, work_end_hour,
+                     work_end_minutes)
 
     for index, row in standby_df.iterrows():
-        create_event(cal, row['Date'], 'Standby', standby_start_hour, standby_start_minutes, 20, 30)
+        create_event(cal, row['Date'], 'Standby', standby_start_hour, standby_start_minutes, standby_end_hour,
+                     standby_end_minutes)
 
     return cal
 
