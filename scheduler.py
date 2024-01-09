@@ -4,6 +4,9 @@ from datetime import datetime
 
 
 def read_schedule_csv(file_path, footer_lines):
+    """Reads the csv as a dataframe, transposes the dataframe and forms a new one.
+       Returns dataframe with a normal index and columns "Date", "Shift" and "Standby"
+    """
     df = pd.read_csv(file_path, engine='python', skipfooter=footer_lines, index_col=0)
     transposed_df = df.transpose()
     transposed_df.reset_index(drop=True, inplace=True)
@@ -26,6 +29,7 @@ def read_schedule_csv(file_path, footer_lines):
 
 def create_calendar_events(name, df, work_start_hour, work_start_minutes, work_end_hour, work_end_minutes,
                            standby_start_hour, standby_start_minutes, standby_end_hour, standby_end_minutes):
+    """Creates and returns a calendar with the shifts and standby shifts from the name of the employee"""
     cal = Calendar()
     filtered_df = df[df.apply(lambda row: name in row.values, axis=1)]
 
@@ -44,6 +48,7 @@ def create_calendar_events(name, df, work_start_hour, work_start_minutes, work_e
 
 
 def create_event(calendar, date_str, event_name, start_hour, start_minutes, end_hour, end_minutes):
+    """Creates an event on the given calendar with the name, start hour + minutes and end hour + minutes"""
     event_date = datetime.strptime(date_str, '%d/%m/%y')
     start_time = event_date.replace(hour=start_hour, minute=start_minutes)
     end_time = event_date.replace(hour=end_hour, minute=end_minutes)
@@ -57,5 +62,6 @@ def create_event(calendar, date_str, event_name, start_hour, start_minutes, end_
 
 
 def export_calendar(calendar, file_path):
+    """Creates a new ics file in the file_path folder"""
     with open(file_path, 'w') as f:
         f.writelines(calendar)

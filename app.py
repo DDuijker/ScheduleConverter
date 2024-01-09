@@ -15,6 +15,7 @@ WORK_START_HOUR, WORK_START_MINUTES = 19, 0
 WORK_END_HOUR, WORK_END_MINUTES = 22, 0
 STANDBY_START_HOUR, STANDBY_START_MINUTES = 18, 0
 STANDBY_END_HOUR, STANDBY_END_MINUTES = 19, 30
+EMPLOYEES = ["Djoeke", "Menno", "Devinio"]
 
 # Amsterdam time zone
 AMSTERDAM_TZ = pytz.timezone('Europe/Amsterdam')
@@ -26,10 +27,13 @@ def index():
 
 
 def allowed_file(filename):
+    """Checks if filename has a '.' and has an allowed extension. Returns boolean"""
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 
 def check_and_save_csv_file(file):
+    """Checks if file is existent and is secured. Stores file in upload folder. Returns file path or flashes an error
+    message"""
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
@@ -42,6 +46,7 @@ def check_and_save_csv_file(file):
 
 @app.route('/generate', methods=['POST'])
 def generate():
+    """Posts the data and returns the schedule as an ics file"""
     name = request.form['name'].title()
 
     # Check if the post request has the file part
