@@ -20,7 +20,7 @@ Fill in Your Schedule: Populate the template with your actual shift details, inc
 
 Export as CSV: Save your filled-in spreadsheet as a CSV file.
 
-Startup the application using 'python manage.py runserver' in the terminal
+Startup the application using 'flask run' in the terminal
 
 Convert to ICS Format:
 Use the website that launched to fill in the name and to upload the work schedule to export your events in iCalendar format (ICS). This format is widely supported.
